@@ -17,7 +17,7 @@ public class UserController {
 
     @Resource
     UserService userService;
-    @RequestMapping("/register")
+    @PostMapping("/register")
     public Integer userRegister(@RequestBody UserRegister userRegister) { // 账号 密码 检验密码 星球编号
         if(userRegister == null) {
             return -1;
@@ -36,7 +36,7 @@ public class UserController {
     }
 
 
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public User userLogin(@RequestBody UserLogin userLogin, HttpServletRequest request) {
         if(userLogin == null) {
             return null;
@@ -50,7 +50,7 @@ public class UserController {
         return userService.login(userAccount,userPassword, request);
     }
 
-    @RequestMapping("/logout")
+    @PostMapping("/logout")
     public Integer userLogout(HttpServletRequest request) {
         if(request == null) return null;
 
@@ -62,7 +62,7 @@ public class UserController {
      * @param request 用户请求
      * @return 脱敏后的用户
      */
-    @RequestMapping("/current")
+    @GetMapping("/current")
     public User currentUser(HttpServletRequest request) {
 
         Object userObject = request.getSession().getAttribute(USER_LOGIN_STATE);
