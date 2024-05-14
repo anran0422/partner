@@ -4,6 +4,8 @@ import com.anran.partner.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 /**
 * @author Anran
 * @description 针对表【user(用户)】的数据库操作Service
@@ -33,4 +35,12 @@ public interface UserService extends IService<User> {
     User getSaftyUser(User user);
 
     int logout(HttpServletRequest request);
+
+    /**
+     * 通过标签查询用户
+     *
+     * @param tagNamelist 标签列表
+     * @return 脱敏后的用户列表
+     */
+    List<User> searchUserByTags(List<String> tagNamelist);
 }

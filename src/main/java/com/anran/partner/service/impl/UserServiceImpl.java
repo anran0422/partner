@@ -5,14 +5,20 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.anran.partner.model.domain.User;
 import com.anran.partner.mapper.UserMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.anran.partner.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -130,6 +136,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         saftyUser.setUserRole(originalUser.getUserRole());
         saftyUser.setUserStatus(originalUser.getUserStatus());
         saftyUser.setCreateTime(originalUser.getCreateTime());
+        saftyUser.setTags(originalUser.getTags());
 
         return saftyUser;
     }
@@ -139,5 +146,48 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         request.getSession().removeAttribute(USER_LOGIN_STATE);
 
         return 1;
+    }
+
+    /**
+     * 通过标签查询用户
+     *
+     * @param tagNamelist 用户拥有的标签
+     * @return 脱敏后的用户
+     */
+    @Override
+    public List<User> searchUserByTags(List<String> tagNamelist) {
+        if(CollectionUtils.isEmpty(tagNamelist)) {
+            return null;
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        // 拼接 and 查询
+        // like '%Java%' and like '%Python%'
+        for(String tagName : tagNamelist) {
+            // like会自动帮我们添加 %实现模糊查询
+            queryWrapper = queryWrapper.like("tags", tagName);
+        }
+        List<User> userList = userMapper.selectList(queryWrapper);
+        return userList.stream().map(this::getSaftyUser).collect(Collectors.toList());
+
+//        // 1. 先查询所有用户
+//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        List<User> userList = userMapper.selectList(queryWrapper);
+//        Gson gson = new Gson();
+//        // 2. 在内存中判断是否包含要求的标签(stream()API)
+//        return userList.stream().filter(user -> {
+//            String tagStr = user.getTags();
+//            if(StringUtils.isBlank(tagStr)) {
+//                return false;
+//            }
+//            // json 转 字符串
+//            Set<String> tempTagNameSet = gson.fromJson(tagStr, new TypeToken<Set<String>>(){}.getType());
+//            //            gson.toJson(tempTagNameList); 这是序列化还是反序列化
+//            for(String tagName : tagNamelist) {
+//                if(!tempTagNameSet.contains(tagName)) {
+//                    return false;
+//                }
+//            }
+//            return true;
+//        }).map(this::getSaftyUser).collect(Collectors.toList());
     }
 }

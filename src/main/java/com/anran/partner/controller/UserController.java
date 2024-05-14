@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.anran.partner.constant.UserConstant.USER_LOGIN_STATE;
 
 @RestController
@@ -73,8 +75,13 @@ public class UserController {
         Integer userId = currentUser.getId();
         // 脱敏后将用户返回
         User user = userService.getById(userId);
-        User safetyUser = userService.getSaftyUser(user);
 
-        return safetyUser;
+        return userService.getSaftyUser(user);
+    }
+    @GetMapping("/searchtags")
+    public List<User> searchUserByTags(@RequestParam List<String> tagNameList) {
+        if(tagNameList == null) return null;
+
+        return userService.searchUserByTags(tagNameList);
     }
 }
