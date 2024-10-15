@@ -7,14 +7,25 @@ spring:
     url: jdbc:mysql://localhost:3306/partner
     username: root
     password: 123456
-  # session ????
+  # redis 配置
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+
+
+  # session 配置
   session:
     timeout: 86400
+    store-type: redis
 
-#server:
-#  port: 8080
-#  servlet:
-#    context-path: /api
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+    session:
+      cookie:
+        domain: localhost
 
 mybatis-plus:
   configuration:
@@ -23,9 +34,24 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      logic-delete-field: isDelete # ????????????(since 3.3.0,????????????2)
-      logic-delete-value: 1 # ??????(??? 1)
-      logic-not-delete-value: 0 # ??????(??? 0)
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
 
-
-
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    #自定义swagger前端请求路径,输入http:localhost:8080/swagger-ui会自动重定向到swagger页面
+    path: /swagger-ui
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs  #swagger后端请求地址
+    enabled: true   #是否开启文档功能
+  group-configs: #分组配置,可配置多个分组
+    - group: 'default'             #分组名称
+      paths-to-match: '/**'        #配置需要匹配的路径
+      packages-to-scan: com.anran    #配置要扫描包的路径,一般配置到启动类所在的包名
+    - group: 'admin-api'
+      paths-to-match: '/**'
+      packages-to-scan: com.anran

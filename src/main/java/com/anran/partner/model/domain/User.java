@@ -1,10 +1,10 @@
 package com.anran.partner.model.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 用户
@@ -38,7 +38,7 @@ public class User implements Serializable {
     private String avatarUrl;
 
     /**
-     * 性别
+     * 性别 0男-1女
      */
     @TableField(value = "gender")
     private Integer gender;

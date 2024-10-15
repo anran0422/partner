@@ -14,12 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.anran.partner.constant.UserConstant.ADMIN_ROLE;
 import static com.anran.partner.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
@@ -149,45 +152,102 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     /**
-     * 通过标签查询用户
+     * 根据标签搜索用户（SQL 查询版)
      *
-     * @param tagNamelist 用户拥有的标签
+     * @param tagNameList 用户拥有的标签
      * @return 脱敏后的用户
+     * 打上过期标签，说明不用
+     */
+    @Deprecated
+    private List<User> searchUserByTagsSQL(List<String> tagNameList) {
+        if(CollectionUtils.isEmpty(tagNameList)) {
+            return null;
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        // 拼接 and 查询
+        // like '%Java%' and like '%Python%'
+        for(String tagName : tagNameList) {
+            // like会自动帮我们添加 %实现模糊查询
+            queryWrapper = queryWrapper.like("tags", tagName);
+        }
+        List<User> userList = userMapper.selectList(queryWrapper);
+        return userList.stream().map(this::getSaftyUser).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据标签查询搜索用户（内存过滤）
+     * @param tagNamelist 标签列表
+     * @return 返回脱敏的用户
      */
     @Override
     public List<User> searchUserByTags(List<String> tagNamelist) {
         if(CollectionUtils.isEmpty(tagNamelist)) {
             return null;
         }
+        // 1. 先查询所有用户
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        // 拼接 and 查询
-        // like '%Java%' and like '%Python%'
-        for(String tagName : tagNamelist) {
-            // like会自动帮我们添加 %实现模糊查询
-            queryWrapper = queryWrapper.like("tags", tagName);
-        }
         List<User> userList = userMapper.selectList(queryWrapper);
-        return userList.stream().map(this::getSaftyUser).collect(Collectors.toList());
+        Gson gson = new Gson();
+        // 2. 在内存中判断是否包含要求的标签(stream()API)
+        return userList.stream().filter(user -> {
+            String tagStr = user.getTags();
+            if(StringUtils.isBlank(tagStr)) {
+                return false;
+            }// json 反序列化 转为java对象
 
-//        // 1. 先查询所有用户
-//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-//        List<User> userList = userMapper.selectList(queryWrapper);
-//        Gson gson = new Gson();
-//        // 2. 在内存中判断是否包含要求的标签(stream()API)
-//        return userList.stream().filter(user -> {
-//            String tagStr = user.getTags();
-//            if(StringUtils.isBlank(tagStr)) {
-//                return false;
-//            }
-//            // json 转 字符串
-//            Set<String> tempTagNameSet = gson.fromJson(tagStr, new TypeToken<Set<String>>(){}.getType());
-//            //            gson.toJson(tempTagNameList); 这是序列化还是反序列化
-//            for(String tagName : tagNamelist) {
-//                if(!tempTagNameSet.contains(tagName)) {
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }).map(this::getSaftyUser).collect(Collectors.toList());
+            Set<String> tempTagNameSet = gson.fromJson(tagStr, new TypeToken<Set<String>>(){}.getType());
+            tempTagNameSet = Optional.ofNullable(tempTagNameSet).orElse(new HashSet<>());
+            //            gson.toJson(tempTagNameList); 这是序列化还是反序列化
+            for(String tagName : tagNamelist) {
+                if(!tempTagNameSet.contains(tagName)) {
+                    return false;
+                }
+            }
+            return true;
+        }).map(this::getSaftyUser).collect(Collectors.toList());
     }
+
+    @Override
+    public int updateUser(User user,User loginUser) {
+        long userId = user.getId();
+        if(userId <= 0) return -1;
+        // todo 补充校验，如果用户没有传任何更新的值，不调用sql语句
+        // 校验权限：仅管理员以及用户可以修改
+        // 如果是管理员，允许更新任意用户
+        // 如果是用户，仅允许修改自己的信息
+        if(isAdmin(loginUser) && userId !=loginUser.getId()) {
+            return -1;
+        }
+        User targetUser = userMapper.selectById(userId);
+        if(targetUser == null) return -1;
+        userMapper.updateById(user);
+        return user.getId();
+    }
+
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        if(request == null) {
+            return null;
+        }
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        // 鉴权
+        if(userObj == null) {
+            return null;
+        }
+        return (User)userObj;
+    }
+
+    @Override
+    public boolean isAdmin(User user) {
+        // 代码可以简化
+        if(user == null) {
+            return false;
+        }
+        if(user.getUserRole() != ADMIN_ROLE) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -13,14 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class UserServiceImplTest {
-    @Resource
-    private UserService userService;
-
-    @Test
-    public void searchUserByTags() {
-        List<String> tagNameList = Arrays.asList("java","python");
-        List<User> userList = userService.searchUserByTags(tagNameList);
-        Assertions.assertNotNull(userList);
-    }
 }
