@@ -1,8 +1,8 @@
 package com.anran.partner.controller;
 
 import com.anran.partner.model.domain.User;
-import com.anran.partner.model.domain.request.UserLogin;
-import com.anran.partner.model.domain.request.UserRegister;
+import com.anran.partner.model.request.UserLogin;
+import com.anran.partner.model.request.UserRegister;
 import com.anran.partner.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static com.anran.partner.constant.UserConstant.USER_LOGIN_STATE;
 

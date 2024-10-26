@@ -64,4 +64,6 @@ public interface UserService extends IService<User> {
      * @return 返回 true || false
      */
     boolean isAdmin(User user);
+
+    boolean isAdmin(HttpServletRequest request);
 }

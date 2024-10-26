@@ -239,15 +239,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public boolean isAdmin(User user) {
-        // 代码可以简化
-        if(user == null) {
-            return false;
-        }
-        if(user.getUserRole() != ADMIN_ROLE) {
-            return false;
-        }
+        return user != null && user.getUserRole() == ADMIN_ROLE;
+    }
 
-        return true;
+    @Override
+    public boolean isAdmin(HttpServletRequest request) {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User user = (User)userObj;
+        return user != null && user.getUserRole() == ADMIN_ROLE;
     }
 
 }

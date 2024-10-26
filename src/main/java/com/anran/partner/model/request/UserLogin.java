@@ -1,4 +1,4 @@
-package com.anran.partner.model.domain.request;
+package com.anran.partner.model.request;
 
 import lombok.Data;
 
