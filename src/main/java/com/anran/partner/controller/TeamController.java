@@ -5,9 +5,7 @@ import com.anran.partner.model.VueObject.TeamUserVo;
 import com.anran.partner.model.VueObject.UserVo;
 import com.anran.partner.model.domain.Team;
 import com.anran.partner.model.domain.User;
-import com.anran.partner.model.request.AddTeamRequest;
-import com.anran.partner.model.request.JoinTeamRequest;
-import com.anran.partner.model.request.UpdateTeamRequest;
+import com.anran.partner.model.request.*;
 import com.anran.partner.service.TeamService;
 import com.anran.partner.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -41,13 +39,11 @@ public class TeamController {
     }
 
     @PostMapping("/delete")
-    public Boolean deleteTeam(@RequestBody long id) {
-        if(id <= 0) return false;
-
-        boolean res = teamService.removeById(id);
-        if(!res) return false;
-
-        return true;
+    public Boolean deleteTeam(@RequestBody DeleteTeamRequest deleteTeamRequest, HttpServletRequest request) {
+        if(deleteTeamRequest ==null) return false;
+        User loginUser = userService.getLoginUser(request);
+        boolean res = teamService.deleteTeam(deleteTeamRequest, loginUser);
+        return res;
     }
 
     @PostMapping("/update")
@@ -112,6 +108,15 @@ public class TeamController {
         if(loginUser == null) return false;
 
         boolean result = teamService.joinTeam(joinTeamRequest, loginUser);
+        return result;
+    }
+
+    @PostMapping("/quit")
+    public Boolean quitTeam(@RequestBody QuitTeamRequest quitTeamRequest, HttpServletRequest request){
+        if(quitTeamRequest == null) return false;
+
+        User loginUser = userService.getLoginUser(request);
+        boolean result = teamService.quitTeam(quitTeamRequest, loginUser);
         return result;
     }
 }
