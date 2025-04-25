@@ -44,6 +44,7 @@ public class PreCacheJob {
         RLock lock = redissonClient.getLock("partner:preCacheJob:lock"); // 设置 键
         try {
             // 只有一个线程能获取到锁
+//            lock.tryLock(0,3000, TimeUnit.MILLISECONDS
             if(lock.tryLock(0,3000, TimeUnit.MILLISECONDS)) {
                 for(Long userId : mainUserIdList) {
                     QueryWrapper<User> queryWrapper = new QueryWrapper<>();

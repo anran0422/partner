@@ -1,9 +1,13 @@
 package com.anran.partner.model.request;
 
+import lombok.Data;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class AddTeamRequest {
-
+@Data
+public class AddTeamRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * 队伍名称
      */

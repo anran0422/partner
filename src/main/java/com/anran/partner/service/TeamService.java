@@ -4,10 +4,7 @@ import com.anran.partner.model.DTO.TeamQuery;
 import com.anran.partner.model.VueObject.TeamUserVo;
 import com.anran.partner.model.domain.Team;
 import com.anran.partner.model.domain.User;
-import com.anran.partner.model.request.DeleteTeamRequest;
-import com.anran.partner.model.request.JoinTeamRequest;
-import com.anran.partner.model.request.QuitTeamRequest;
-import com.anran.partner.model.request.UpdateTeamRequest;
+import com.anran.partner.model.request.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -40,5 +37,5 @@ public interface TeamService extends IService<Team> {
 
     boolean quitTeam(QuitTeamRequest quitTeamRequest, User loginUser);
 
-    boolean deleteTeam(DeleteTeamRequest deleteTeamRequest, User loginUser);
+    Boolean deleteTeam(DeleteTeamRequest deleteTeamRequest, User loginUser);
 }

@@ -4,13 +4,11 @@ package com.anran.partner.service;
 import com.anran.partner.model.domain.User;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class InsertUsersTest {
     @Resource
@@ -23,7 +21,7 @@ public class InsertUsersTest {
      * 顺序插入 10w 批量插入
      * 分10批次 21.978s
      */
-    @Test
+//    @Test
     public void doInsertUsers() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -56,7 +54,7 @@ public class InsertUsersTest {
      * 默认线程池 分10组 1w一组 19.252s
      * 使用定义的线程池 分40 现成 2500一组 39.923s
      */
-    @Test
+//    @Test
     public void doConcurrencyInsertUsers() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

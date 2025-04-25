@@ -1,5 +1,6 @@
 package com.anran.partner.service;
 
+import com.anran.partner.model.VueObject.UserVo;
 import com.anran.partner.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -66,4 +67,6 @@ public interface UserService extends IService<User> {
     boolean isAdmin(User user);
 
     boolean isAdmin(HttpServletRequest request);
+
+    List<User> matchUsers(long num, User loginUser);
 }

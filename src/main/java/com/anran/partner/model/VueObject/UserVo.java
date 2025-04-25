@@ -1,12 +1,16 @@
 package com.anran.partner.model.VueObject;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 用户包装类（脱敏）
  */
+@Data
 public class UserVo implements Serializable {
+
     private static final long serialVersionUID = 1L;
     /**
      * id

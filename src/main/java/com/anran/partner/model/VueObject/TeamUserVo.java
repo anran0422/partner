@@ -6,7 +6,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 队伍用户信息封装类(脱敏)
+ * 队伍用信息封装类(脱敏)
+ * 包含创建人信息
+ * 是否已经加入队伍
  */
 @Data
 public class TeamUserVo implements Serializable {
@@ -17,6 +19,15 @@ public class TeamUserVo implements Serializable {
      */
     UserVo createUser;
 
+    /**
+     * 是否已经加入队伍
+     */
+    private boolean hasJoin = false;
+
+    /**
+     * 加入的用户数
+     */
+    private Integer hasJoinNum;
     /**
      * id
      */
