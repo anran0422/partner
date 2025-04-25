@@ -3,13 +3,63 @@
 
 旨在找到搭子的移动端 H5 网站（APP 风格），是基于基于 Spring Boot + Vue3 的 全栈项目，包括用户登录、更新个人信息、按标签搜索用户、建房组队、推荐相似用户等功能。
 
-### 项目收获
+### 项目亮点
+- Redis 缓存预热，避免访问主页请求数据库，减轻数据库压力
+- 分布式锁 Redisson，后台只有一个线程通过定时任务去构建 Redis 缓存
+- 使用编辑距离算法，优化用户匹配方式
+- 大批量数据导入，测试功能提升幅度
 
-- 学习 Java 8 特性、接口文档、网页内容抓取、大数据量导入、并发编程、定时任务、幂等性、算法
-- 学到缓存项目知识：分布式登录、Redis 缓存及预热
-- 学到分布式相关知识：分布式锁
-- 学到一些源码阅读的技巧
-- 提升自主解决问题的能力
+
+## 功能概览
+
+### 匹配功能
+- 主页
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E4%B8%BB%E9%A1%B5.jpg)
+- 心动模式
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E5%BF%83%E5%8A%A8%E6%A8%A1%E5%BC%8F.jpg)
+
+### 队伍
+- 创建队伍
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E5%88%9B%E5%BB%BA%E9%98%9F%E4%BC%8D.jpg)
+- 已加入的队伍
+
+  
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E5%B7%B2%E5%8A%A0%E5%85%A5%E9%98%9F%E4%BC%8D.jpg)
+- 已创建的队伍
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E5%B7%B2%E5%88%9B%E5%BB%BA%E9%98%9F%E4%BC%8D.jpg)
+- 搜索队伍
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E6%90%9C%E7%B4%A2%E9%98%9F%E4%BC%8D.jpg)
+- 更新队伍
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E6%9B%B4%E6%96%B0%E9%98%9F%E4%BC%8D.jpg)
+### 用户
+- 按照标签搜索用户
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E6%A0%87%E7%AD%BE%E6%90%9C%E7%B4%A2%E7%94%A8%E6%88%B7.jpg)
+- 个人信息
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF.jpg)
+- 修改个人信息
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E4%BF%AE%E6%94%B9%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF.jpg)
+- 编辑信息
+
+
+![](https://cloud-1311088844.cos.ap-beijing.myqcloud.com/public_share/project/partner/%E7%BC%96%E8%BE%91%E4%BF%A1%E6%81%AF.jpg)
 
 
 ### 技术选型
